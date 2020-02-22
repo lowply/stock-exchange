@@ -1,6 +1,6 @@
 # Stock & Exchange
 
-Scrapes https://stocks.finance.yahoo.co.jp and http://www.murc-kawasesouba.jp and get the stock price and USD-JPY TTM of the day. Useful for your MSFT RSU calculation in Japan.
+Scrapes https://stocks.finance.yahoo.co.jp and http://www.murc-kawasesouba.jp and get the stock price and USD-JPY TTM of the day. Useful for your RSU calculation in Japan.
 
 ## Installation
 
