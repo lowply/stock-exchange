@@ -4,7 +4,7 @@ Scrapes https://stocks.finance.yahoo.co.jp and http://www.murc-kawasesouba.jp an
 
 ## Installation
 
-Download [the latest release](/lowply/stock-exchange/releases) and unzip it.
+Download [the latest release](https://github.com/lowply/stock-exchange/releases) and unzip it.
 
 ## Usage
 
