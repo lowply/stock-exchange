@@ -1,70 +1,50 @@
 package main
 
 import (
-	"errors"
 	"fmt"
-	"net/http"
-	"os"
 	"time"
-
-	"github.com/PuerkitoBio/goquery"
 )
 
 type stock struct {
-	url     string
-	date    string
-	dompath string
-	result  Result
+	ticker string
+	*scraper
+	result result
 }
 
-func NewStock() *stock {
-	ticker := os.Args[1]
-	S := &stock{
-		date:    os.Args[2],
-		url:     "https://stocks.finance.yahoo.co.jp/us/history/" + ticker + "?",
-		dompath: "div#main .padT12 table tbody tr td",
+func NewStock(ticker string, date time.Time, url string, dompath string) *stock {
+	y := date.Year()
+	m := int(date.Month())
+	d := date.Day()
+	qs := fmt.Sprintf("sy=%v&sm=%v&sd=%v&ey=%v&em=%v&ed=%v&tm=d", y, m, d, y, m, d)
+
+	return &stock{
+		ticker: ticker,
+		scraper: &scraper{
+			date:    date,
+			url:     url + ticker + "?" + qs,
+			dompath: dompath,
+		},
 	}
-	return S
 }
 
-func (req *stock) qs() (string, error) {
-	t, err := time.Parse("2006-01-02", req.date)
-	if err != nil {
-		return "", err
-	}
-	y := t.Year()
-	m := int(t.Month())
-	d := t.Day()
-	return fmt.Sprintf("sy=%v&sm=%v&sd=%v&ey=%v&em=%v&ed=%v&tm=d", y, m, d, y, m, d), nil
-}
-
-func (req *stock) query() error {
-	qs, err := req.qs()
+func (s *stock) get() error {
+	fmt.Println("Querying " + s.url + " ...")
+	err := s.scrape()
 	if err != nil {
 		return err
 	}
 
-	req.url = req.url + qs
-	fmt.Println("Querying " + req.url + " ...")
+	td := s.doc.Find(s.dompath)
 
-	res, err := http.Get(req.url)
-	if err != nil {
-		return err
-
-	}
-	defer res.Body.Close()
-	if res.StatusCode != 200 {
-		return errors.New(fmt.Sprintf("status code error: %d %s", res.StatusCode, res.Status))
-	}
-
-	doc, err := goquery.NewDocumentFromReader(res.Body)
+	date, err := time.Parse("2006年1月2日", td.First().Text())
 	if err != nil {
 		return err
 	}
 
-	td := doc.Find(req.dompath)
-	req.result.date = td.First().Text()
-	req.result.value = td.Last().Text()
+	s.result.date = date
+	s.result.value = td.Last().Text()
+
+	fmt.Printf("%v: %v = %v\n", s.result.date.Format("2006/01/02"), s.ticker, s.result.value)
 
 	return nil
 }

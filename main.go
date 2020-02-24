@@ -4,13 +4,8 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"time"
 )
-
-type Result struct {
-	date     string
-	value    string
-	currency string
-}
 
 func usage() {
 	fmt.Println("Usage: go run . [ticker] [YYYY-MM-DD]")
@@ -18,19 +13,35 @@ func usage() {
 }
 
 func exec() error {
-	S := NewStock()
-	err := S.query()
+	date, err := time.Parse("2006-01-02", os.Args[2])
 	if err != nil {
 		return err
 	}
-	fmt.Printf("%v, %v\n", S.result.date, S.result.value)
 
-	E := NewExchange()
-	err = E.query()
+	ticker := os.Args[1]
+
+	stock := NewStock(
+		ticker,
+		date,
+		"https://stocks.finance.yahoo.co.jp/us/history/",
+		"div#main .padT12 table tbody tr td",
+	)
+
+	exchange := NewExchange(
+		date,
+		"http://www.murc-kawasesouba.jp/fx/past/index.php?id=",
+		"div#main table.data-table7 tbody tr",
+	)
+
+	err = stock.get()
 	if err != nil {
 		return err
 	}
-	fmt.Printf("%v, %v, %v\n", E.result.date, E.result.currency, E.result.value)
+
+	err = exchange.get()
+	if err != nil {
+		return err
+	}
 
 	return nil
 }

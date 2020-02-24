@@ -3,71 +3,49 @@ package main
 import (
 	"errors"
 	"fmt"
-	"net/http"
-	"os"
 	"strconv"
 	"strings"
 	"time"
-
-	"github.com/PuerkitoBio/goquery"
 )
 
 type exchange struct {
-	url     string
-	date    string
-	dompath string
-	result  Result
+	*scraper
+	result result
 }
 
-func NewExchange() *exchange {
-	E := &exchange{
-		date:    os.Args[2],
-		url:     "http://www.murc-kawasesouba.jp/fx/past/index.php?id=",
-		dompath: "div#main table.data-table7 tbody tr",
+func NewExchange(date time.Time, url string, dompath string) *exchange {
+	y := date.Format("06")
+	m := fmt.Sprintf("%02d", int(date.Month()))
+	d := date.Format("02")
+	qs := fmt.Sprintf("%v%v%v", y, m, d)
+
+	return &exchange{
+		scraper: &scraper{
+			date:    date,
+			url:     url + qs,
+			dompath: dompath,
+		},
 	}
-	return E
 }
 
-func (req *exchange) qs() (string, error) {
-	t, err := time.Parse("2006-01-02", req.date)
-	if err != nil {
-		return "", err
-	}
-	y := t.Format("06")
-	m := fmt.Sprintf("%02d", int(t.Month()))
-	d := t.Format("02")
-	return fmt.Sprintf("%v%v%v", y, m, d), nil
-}
+func (e *exchange) get() error {
+	fmt.Println("Querying " + e.url + " ...")
 
-func (req *exchange) query() error {
-	qs, err := req.qs()
+	err := e.scrape()
 	if err != nil {
 		return err
 	}
 
-	req.url = req.url + qs
-	fmt.Println("Querying " + req.url + " ...")
+	tr := e.doc.Find("div#main table.data-table7 tbody tr").Eq(1)
+	h2 := e.doc.Find("div#main h2")
 
-	res, err := http.Get(req.url)
-	if err != nil {
-		return err
-
-	}
-	defer res.Body.Close()
-	if res.StatusCode != 200 {
-		return errors.New(fmt.Sprintf("status code error: %d %s", res.StatusCode, res.Status))
-	}
-
-	doc, err := goquery.NewDocumentFromReader(res.Body)
+	date, err := time.Parse("January 2, 2006", strings.TrimSpace(strings.Split(h2.Text(), "As of ")[1]))
 	if err != nil {
 		return err
 	}
 
-	tr := doc.Find("div#main table.data-table7 tbody tr").Eq(1)
-	h2 := doc.Find("div#main h2")
-
-	req.result.date = strings.TrimSpace(strings.Split(h2.Text(), "As of ")[1])
-	req.result.currency = strings.TrimSpace(tr.Find("td").First().Text())
+	e.result.date = date
+	e.result.currency = strings.TrimSpace(tr.Find("td").First().Text())
 
 	sTTS := strings.TrimSpace(tr.Find("td").Eq(3).Text())
 	if sTTS == "" {
@@ -90,7 +68,9 @@ func (req *exchange) query() error {
 	}
 
 	TTM := strconv.FormatFloat((TTS+TTB)/2, 'f', -1, 64)
-	req.result.value = TTM
+	e.result.value = TTM
+
+	fmt.Printf("%v: %v = %v\n", e.result.date.Format("2006/01/02"), "USD TTM", e.result.value)
 
 	return nil
 }
