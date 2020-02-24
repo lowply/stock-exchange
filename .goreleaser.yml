@@ -2,6 +2,9 @@ archives:
 - format: zip
   files:
   - none*
+  replacements:
+    darwin: macOS
+    linux: Linux
 snapshot:
   name_template: '{{ .Tag }}'
 builds:
