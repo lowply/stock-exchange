@@ -1,0 +1,9 @@
+archives:
+- format: zip
+  files:
+  - none*
+snapshot:
+  name_template: '{{ .Tag }}'
+builds:
+- goarch:
+  - amd64
