@@ -8,17 +8,16 @@ import (
 )
 
 func usage() {
-	fmt.Println("Usage: go run . [ticker] [YYYY-MM-DD]")
+	fmt.Println("Usage: ./stock-exchange [ticker] [YYYY-MM-DD]")
 	os.Exit(1)
 }
 
 func exec() error {
+	ticker := os.Args[1]
 	date, err := time.Parse("2006-01-02", os.Args[2])
 	if err != nil {
 		return err
 	}
-
-	ticker := os.Args[1]
 
 	stock := NewStock(
 		ticker,

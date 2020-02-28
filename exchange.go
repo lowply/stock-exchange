@@ -10,7 +10,7 @@ import (
 
 type exchange struct {
 	*scraper
-	result result
+	result string
 }
 
 func NewExchange(date time.Time, url string, dompath string) *exchange {
@@ -30,22 +30,17 @@ func NewExchange(date time.Time, url string, dompath string) *exchange {
 
 func (e *exchange) get() error {
 	fmt.Println("Querying " + e.url + " ...")
-
 	err := e.scrape()
 	if err != nil {
 		return err
 	}
 
 	tr := e.doc.Find("div#main table.data-table7 tbody tr").Eq(1)
-	h2 := e.doc.Find("div#main h2")
 
-	date, err := time.Parse("January 2, 2006", strings.TrimSpace(strings.Split(h2.Text(), "As of ")[1]))
-	if err != nil {
-		return err
+	if tr.Text() == "" {
+		fmt.Printf("%v: No exchange data\n", e.date.Format("2006/01/02"))
+		return nil
 	}
-
-	e.result.date = date
-	e.result.currency = strings.TrimSpace(tr.Find("td").First().Text())
 
 	sTTS := strings.TrimSpace(tr.Find("td").Eq(3).Text())
 	if sTTS == "" {
@@ -68,9 +63,9 @@ func (e *exchange) get() error {
 	}
 
 	TTM := strconv.FormatFloat((TTS+TTB)/2, 'f', -1, 64)
-	e.result.value = TTM
+	e.result = TTM
 
-	fmt.Printf("%v: %v = %v\n", e.result.date.Format("2006/01/02"), "USD TTM", e.result.value)
+	fmt.Printf("%v: %v = %v\n", e.date.Format("2006/01/02"), "JPY/USD TTM", e.result)
 
 	return nil
 }
