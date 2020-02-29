@@ -2,11 +2,20 @@ archives:
 - format:
   files:
   - none*
+  format_overrides:
+  - goos: windows
+    format: zip
   replacements:
     darwin: macOS
     linux: Linux
+    windows: Windows
 snapshot:
   name_template: '{{ .Tag }}'
 builds:
-- goarch:
-  - amd64
+  -
+    goos:
+      - linux
+      - darwin
+      - windows
+    goarch:
+      - amd64
