@@ -1,5 +1,5 @@
 archives:
-- format: zip
+- format:
   files:
   - none*
   replacements:
