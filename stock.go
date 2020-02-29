@@ -8,7 +8,6 @@ import (
 type stock struct {
 	ticker string
 	*scraper
-	result string
 }
 
 func NewStock(ticker string, date time.Time, url string, dompath string) *stock {
@@ -42,8 +41,7 @@ func (s *stock) get() error {
 	}
 
 	s.result = td.Last().Text()
-
-	fmt.Printf("%v: %v = %v\n", s.date.Format("2006/01/02"), s.ticker, s.result)
+	s.output(s.ticker)
 
 	return nil
 }

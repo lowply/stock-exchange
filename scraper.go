@@ -14,6 +14,7 @@ type scraper struct {
 	url     string
 	dompath string
 	doc     *goquery.Document
+	result  string
 }
 
 func (s *scraper) scrape() error {
@@ -32,4 +33,8 @@ func (s *scraper) scrape() error {
 		return err
 	}
 	return nil
+}
+
+func (s *scraper) output(u string) {
+	fmt.Printf("%v: %v = %v\n", s.date.Format("2006/01/02"), u, s.result)
 }

@@ -10,7 +10,6 @@ import (
 
 type exchange struct {
 	*scraper
-	result string
 }
 
 func NewExchange(date time.Time, url string, dompath string) *exchange {
@@ -65,7 +64,7 @@ func (e *exchange) get() error {
 	TTM := strconv.FormatFloat((TTS+TTB)/2, 'f', -1, 64)
 	e.result = TTM
 
-	fmt.Printf("%v: %v = %v\n", e.date.Format("2006/01/02"), "JPY/USD TTM", e.result)
+	e.output("JPY/USD TTM")
 
 	return nil
 }
