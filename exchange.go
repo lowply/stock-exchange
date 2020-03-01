@@ -20,6 +20,7 @@ func NewExchange(date time.Time, url string, dompath string) *exchange {
 
 	return &exchange{
 		scraper: &scraper{
+			name:    "JPY/USD TTM",
 			date:    date,
 			url:     url + qs,
 			dompath: dompath,
@@ -63,8 +64,7 @@ func (e *exchange) get() error {
 
 	TTM := strconv.FormatFloat((TTS+TTB)/2, 'f', -1, 64)
 	e.result = TTM
-
-	e.output("JPY/USD TTM")
+	e.output()
 
 	return nil
 }

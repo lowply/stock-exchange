@@ -6,7 +6,6 @@ import (
 )
 
 type stock struct {
-	ticker string
 	*scraper
 }
 
@@ -17,8 +16,8 @@ func NewStock(ticker string, date time.Time, url string, dompath string) *stock 
 	qs := fmt.Sprintf("sy=%v&sm=%v&sd=%v&ey=%v&em=%v&ed=%v&tm=d", y, m, d, y, m, d)
 
 	return &stock{
-		ticker: ticker,
 		scraper: &scraper{
+			name:    ticker,
 			date:    date,
 			url:     url + ticker + "?" + qs,
 			dompath: dompath,
@@ -41,7 +40,7 @@ func (s *stock) get() error {
 	}
 
 	s.result = td.Last().Text()
-	s.output(s.ticker)
+	s.output()
 
 	return nil
 }
