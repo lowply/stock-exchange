@@ -4,6 +4,14 @@ Scrapes https://stocks.finance.yahoo.co.jp and http://www.murc-kawasesouba.jp an
 
 ## Installation
 
+If you have [Go](https://golang.org/) installed on your machine, just run:
+
+```
+go get github.com/lowply/stock-exchange
+```
+
+If you don't:
+
 - Download [the latest release](https://github.com/lowply/stock-exchange/releases)
 - Unarchive it
 - Move the `stock-exchange` binary to `/usr/local/bin` or equivalent directory
@@ -13,7 +21,7 @@ Scrapes https://stocks.finance.yahoo.co.jp and http://www.murc-kawasesouba.jp an
 Run:
 
 ```
-./stock-exchange MSFT 2020-02-14
+stock-exchange MSFT 2020-02-14
 ```
 
 Result:
