@@ -13,8 +13,9 @@ type testCaseStock struct {
 
 func TestStock(t *testing.T) {
 	testCases := []testCaseStock{
+		{ticker: "AMZN", date: "2018-11-28", should: "1,677.75"},
 		{ticker: "MSFT", date: "2020-02-14", should: "185.35"},
-		{ticker: "AMZN", date: "2020-01-30", should: "1,870.68"},
+		{ticker: "MSFT", date: "2020-02-15", should: ""},
 	}
 
 	for _, v := range testCases {

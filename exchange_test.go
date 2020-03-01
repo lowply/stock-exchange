@@ -12,8 +12,9 @@ type testCaseExchange struct {
 
 func TestExchange(t *testing.T) {
 	testCases := []testCaseExchange{
+		{date: "2018-11-28", should: "113.79"},
 		{date: "2020-02-14", should: "109.89"},
-		{date: "2020-01-30", should: "109.01"},
+		{date: "2020-02-15", should: ""},
 	}
 
 	for _, v := range testCases {
