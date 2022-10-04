@@ -22,8 +22,8 @@ func exec() error {
 	stock := NewStock(
 		ticker,
 		date,
-		"https://stocks.finance.yahoo.co.jp/us/history/",
-		"div#main .padT12 table tbody tr td",
+		"https://finance.yahoo.co.jp/quote/",
+		"body div#wrapper div#root main div div div div section div table tbody tr td",
 	)
 
 	exchange := NewExchange(
