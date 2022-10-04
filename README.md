@@ -7,7 +7,7 @@ Scrapes https://stocks.finance.yahoo.co.jp and http://www.murc-kawasesouba.jp an
 If you have [Go](https://golang.org/) installed on your machine, just run:
 
 ```
-go get github.com/lowply/stock-exchange
+go install github.com/lowply/stock-exchange@latest
 ```
 
 If you don't:
