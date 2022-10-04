@@ -10,16 +10,14 @@ type stock struct {
 }
 
 func NewStock(ticker string, date time.Time, url string, dompath string) *stock {
-	y := date.Year()
-	m := int(date.Month())
-	d := date.Day()
-	qs := fmt.Sprintf("sy=%v&sm=%v&sd=%v&ey=%v&em=%v&ed=%v&tm=d", y, m, d, y, m, d)
+	ymd := date.Format("20060102")
+	qs := fmt.Sprintf("from=%v&to=%v&timeFrame=d&page=1", ymd, ymd)
 
 	return &stock{
 		scraper: &scraper{
 			name:    ticker,
 			date:    date,
-			url:     url + ticker + "?" + qs,
+			url:     url + ticker + "/history?" + qs,
 			dompath: dompath,
 		},
 	}
