@@ -1,9 +1,8 @@
 module github.com/lowply/stock-exchange
 
-go 1.13
+go 1.18
 
 require (
-	github.com/PuerkitoBio/goquery v1.6.1
-	github.com/andybalholm/cascadia v1.2.0 // indirect
-	golang.org/x/net v0.0.0-20210119194325-5f4716e94777 // indirect
+	github.com/PuerkitoBio/goquery v1.8.0
+	golang.org/x/net v0.0.0-20221002022538-bcab6841153b // indirect
 )
