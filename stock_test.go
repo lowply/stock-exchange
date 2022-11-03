@@ -13,7 +13,7 @@ type testCaseStock struct {
 
 func TestStock(t *testing.T) {
 	testCases := []testCaseStock{
-		{ticker: "AMZN", date: "2018-11-28", should: "1,677.75"},
+		{ticker: "AMZN", date: "2018-11-28", should: "83.88"},
 		{ticker: "MSFT", date: "2020-02-14", should: "185.35"},
 		{ticker: "MSFT", date: "2020-02-15", should: ""},
 	}
@@ -29,8 +29,8 @@ func TestStock(t *testing.T) {
 		s := NewStock(
 			v.ticker,
 			date,
-			"https://stocks.finance.yahoo.co.jp/us/history/",
-			"div#main .padT12 table tbody tr td",
+			"https://finance.yahoo.co.jp/quote/",
+			"body div#wrapper div#root main div div div div section div table tbody tr td",
 		)
 
 		s.get()
