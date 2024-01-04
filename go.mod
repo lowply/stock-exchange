@@ -1,6 +1,6 @@
 module github.com/lowply/stock-exchange
 
-go 1.21.0
+go 1.21.5
 
 require github.com/PuerkitoBio/goquery v1.8.1
 
