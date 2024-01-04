@@ -28,7 +28,7 @@ func exec() error {
 
 	exchange := NewExchange(
 		date,
-		"http://www.murc-kawasesouba.jp/fx/past/index.php?id=",
+		"https://www.murc-kawasesouba.jp/fx/past/index.php?id=",
 		"div#main table.data-table7 tbody tr",
 	)
 
